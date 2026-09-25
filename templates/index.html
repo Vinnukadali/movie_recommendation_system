@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MovieMind | Movie Recommendation</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <div class="background">
+        <div class="orb orb-one"></div>
+        <div class="orb orb-two"></div>
+        <div class="orb orb-three"></div>
+    </div>
+
+
+    <div class="container">
+
+
+        <nav class="navbar">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    🎬
+                </div>
+
+                <div>
+                    <div class="brand-name">
+                        Movie<span>Mind</span>
+                    </div>
+
+                    <div class="brand-subtitle">
+                        AI RECOMMENDATION
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="nav-status">
+
+                <span class="status-dot"></span>
+
+                ML SYSTEM ONLINE
+
+            </div>
+
+        </nav>
+
+
+
+        <section class="hero">
+
+            <div class="hero-badge">
+                <span>✦</span>
+                CONTENT-BASED RECOMMENDER
+            </div>
+
+
+            <h1>
+
+                Discover Movies
+                <br>
+
+                <span>You’ll Love.</span>
+
+            </h1>
+
+
+            <p class="hero-description">
+
+                Enter a movie you love and our machine learning
+                model will find similar movies for you.
+
+            </p>
+
+
+            <div class="search-wrapper">
+
+                <div class="search-icon">
+                    🔍
+                </div>
+
+                <input
+                    type="text"
+                    id="movieInput"
+                    placeholder="Enter a movie name..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="searchButton"
+                    onclick="recommendMovies()"
+                >
+
+                    <span id="buttonText">
+                        Recommend
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <div class="examples">
+
+                <span>Try:</span>
+
+                <button onclick="setMovie('Avatar')">
+                    Avatar
+                </button>
+
+                <button onclick="setMovie('Inception')">
+                    Inception
+                </button>
+
+                <button onclick="setMovie('Titanic')">
+                    Titanic
+                </button>
+
+            </div>
+
+
+            <div
+                id="errorMessage"
+                class="error-message"
+            ></div>
+
+        </section>
+
+
+
+        <section
+            id="movieSection"
+            class="movie-section hidden"
+        >
+
+            <div class="section-label">
+                YOUR SEARCH
+            </div>
+
+
+            <div class="featured-card">
+
+                <div class="featured-glow"></div>
+
+
+                <div class="featured-content">
+
+
+                    <div class="featured-poster">
+
+                        <div class="poster-shine"></div>
+
+                        <div class="poster-camera">
+                            🎥
+                        </div>
+
+                        <div class="poster-title">
+                            <span id="posterTitle">
+                                MOVIE
+                            </span>
+                        </div>
+
+                        <div class="poster-bottom">
+                            MOVIEMIND
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="featured-info">
+
+                        <div class="mini-label">
+                            SELECTED MOVIE
+                        </div>
+
+
+                        <h2 id="mainTitle">
+                            Movie Title
+                        </h2>
+
+
+                        <div class="featured-meta">
+
+                            <div class="meta-box">
+
+                                <span class="meta-icon">
+                                    ✦
+                                </span>
+
+                                <div>
+                                    <small>
+                                        ENGINE
+                                    </small>
+
+                                    <strong>
+                                        ML Model
+                                    </strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="meta-box">
+
+                                <span class="meta-icon">
+                                    ◎
+                                </span>
+
+                                <div>
+                                    <small>
+                                        METHOD
+                                    </small>
+
+                                    <strong>
+                                        Cosine Similarity
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <p class="featured-description">
+
+                            Your selected movie has been analyzed
+                            using movie metadata. Below are the
+                            most similar movies identified by the
+                            recommendation model.
+
+                        </p>
+
+
+                        <div class="model-info">
+
+                            <span class="model-check">
+                                ✓
+                            </span>
+
+                            Recommendation generated successfully
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <section
+            id="resultsSection"
+            class="results-section hidden"
+        >
+
+
+            <div class="results-heading">
+
+                <div>
+
+                    <div class="section-label">
+                        AI RESULTS
+                    </div>
+
+                    <h2>
+                        Recommended For You
+                    </h2>
+
+                    <p>
+                        Movies similar to your selection
+                    </p>
+
+                </div>
+
+
+                <div class="result-count">
+
+                    <strong>05</strong>
+
+                    <span>
+                        MATCHES
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <div
+                id="recommendations"
+                class="movie-grid"
+            ></div>
+
+
+        </section>
+
+
+
+        <section class="how-section">
+
+            <div class="section-label">
+                HOW IT WORKS
+            </div>
+
+
+            <h2>
+                Simple. Smart. Personalized.
+            </h2>
+
+
+            <div class="steps">
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        01
+                    </div>
+
+                    <div class="step-icon">
+                        🔎
+                    </div>
+
+                    <h3>
+                        Search
+                    </h3>
+
+                    <p>
+                        Enter the name of a movie you like.
+                    </p>
+
+                </div>
+
+
+
+                <div class="step-line"></div>
+
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        02
+                    </div>
+
+                    <div class="step-icon">
+                        🧠
+                    </div>
+
+                    <h3>
+                        Analyze
+                    </h3>
+
+                    <p>
+                        The ML model compares movie features.
+                    </p>
+
+                </div>
+
+
+
+                <div class="step-line"></div>
+
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        03
+                    </div>
+
+                    <div class="step-icon">
+                        ✨
+                    </div>
+
+                    <h3>
+                        Discover
+                    </h3>
+
+                    <p>
+                        Get five similar movie recommendations.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <footer>
+
+            <div class="footer-logo">
+                🎬 MovieMind
+            </div>
+
+            <p>
+                Built with Python • Flask • Machine Learning
+            </p>
+
+        </footer>
+
+    </div>
+
+
+
+    <script>
+
+        const input =
+            document.getElementById("movieInput");
+
+        const searchButton =
+            document.getElementById("searchButton");
+
+        const buttonText =
+            document.getElementById("buttonText");
+
+        const errorMessage =
+            document.getElementById("errorMessage");
+
+        const movieSection =
+            document.getElementById("movieSection");
+
+        const resultsSection =
+            document.getElementById("resultsSection");
+
+        const recommendations =
+            document.getElementById("recommendations");
+
+
+
+        input.addEventListener(
+            "keypress",
+            function(event) {
+
+                if (event.key === "Enter") {
+
+                    recommendMovies();
+
+                }
+
+            }
+        );
+
+
+
+        function setMovie(movie) {
+
+            input.value = movie;
+
+            input.focus();
+
+            recommendMovies();
+
+        }
+
+
+
+        async function recommendMovies() {
+
+            const movie =
+                input.value.trim();
+
+
+            errorMessage.textContent = "";
+
+
+            if (!movie) {
+
+                errorMessage.textContent =
+                    "Please enter a movie name.";
+
+                input.focus();
+
+                return;
+
+            }
+
+
+
+            searchButton.disabled = true;
+
+            buttonText.innerHTML =
+                `<span class="loader"></span> Analyzing...`;
+
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/recommend?movie=${encodeURIComponent(movie)}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Movie not found."
+                    );
+
+                }
+
+
+
+                document.getElementById(
+                    "mainTitle"
+                ).textContent =
+                    data.movie;
+
+
+                document.getElementById(
+                    "posterTitle"
+                ).textContent =
+                    data.movie.toUpperCase();
+
+
+
+                movieSection.classList.remove(
+                    "hidden"
+                );
+
+
+
+                recommendations.innerHTML = "";
+
+
+
+                data.recommendations.forEach(
+                    function(movie, index) {
+
+                        const card =
+                            document.createElement("div");
+
+
+                        card.className =
+                            "movie-card";
+
+
+                        const colors = [
+                            "purple",
+                            "blue",
+                            "pink",
+                            "orange",
+                            "green"
+                        ];
+
+
+                        const color =
+                            colors[index % colors.length];
+
+
+                        const initials =
+                            getInitials(movie.title);
+
+
+                        card.innerHTML = `
+
+                            <div class="card-poster ${color}">
+
+                                <div class="card-number">
+                                    ${String(index + 1).padStart(2, "0")}
+                                </div>
+
+                                <div class="poster-icon">
+                                    🎬
+                                </div>
+
+                                <div class="initials">
+                                    ${initials}
+                                </div>
+
+                                <div class="poster-label">
+                                    MOVIEMIND
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-content">
+
+                                <div class="match-row">
+
+                                    <span class="match-label">
+                                        MATCH
+                                    </span>
+
+                                    <span class="match-value">
+                                        ${movie.score}%
+                                    </span>
+
+                                </div>
+
+
+                                <h3>
+                                    ${escapeHtml(movie.title)}
+                                </h3>
+
+
+                                <div class="similarity-bar">
+
+                                    <div
+                                        class="similarity-fill"
+                                        style="width:${Math.min(movie.score, 100)}%"
+                                    ></div>
+
+                                </div>
+
+
+                                <div class="similar-text">
+
+                                    <span>
+                                        Similarity
+                                    </span>
+
+                                    <span>
+                                        ${movie.score}%
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+
+                        recommendations.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+
+
+                resultsSection.classList.remove(
+                    "hidden"
+                );
+
+
+
+                setTimeout(
+                    function() {
+
+                        resultsSection.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+
+                    },
+                    200
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                errorMessage.textContent =
+                    error.message;
+
+                movieSection.classList.add(
+                    "hidden"
+                );
+
+                resultsSection.classList.add(
+                    "hidden"
+                );
+
+            }
+
+            finally {
+
+                searchButton.disabled = false;
+
+                buttonText.textContent =
+                    "Recommend";
+
+            }
+
+        }
+
+
+
+        function getInitials(title) {
+
+            const words =
+                title
+                    .replace(/[^a-zA-Z0-9 ]/g, "")
+                    .split(" ")
+                    .filter(Boolean);
+
+
+            if (words.length === 1) {
+
+                return words[0]
+                    .substring(0, 3)
+                    .toUpperCase();
+
+            }
+
+
+            return (
+                words[0][0] +
+                words[1][0]
+            ).toUpperCase();
+
+        }
+
+
+
+        function escapeHtml(text) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                text;
+
+            return div.innerHTML;
+
+        }
+
+    </script>
+
+</body>
+
+</html>
